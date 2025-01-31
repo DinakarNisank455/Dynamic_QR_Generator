@@ -8,8 +8,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>UPI QR Code Generator</h1>
-    
+    <div class="container">
     <!-- Dropdown to Select UPI ID -->
     <label for="upi-select">Choose UPI ID:</label>
     <select id="upi-select">
@@ -25,8 +24,18 @@
         <input type="text" id="new-name" placeholder="Payee Name">
         <button id="save-upi">Save UPI ID</button>
     </div>
+         <label for="amount">Amount (₹):</label>
+        <input type="number" id="amount" step="0.01" min="0" required>
 
+        <button id="generate-btn">Generate QR Code</button>
+
+        <!-- QR Code Display -->
+        <div id="qr-container">
+            <h3>QR Code:</h3>
+            <canvas id="qr-code"></canvas>
+            <p id="upi-name"></p> <!-- Name shown under QR Code -->
+        </div>
+    </div>
     <!-- QR Code Display -->
-    <div id="qr-container"></div>
 </body>
 </html>
