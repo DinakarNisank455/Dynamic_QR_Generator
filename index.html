@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dynamic UPI QR Code</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="script.js" defer></script>
-    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
+    <h1>UPI QR Code Generator</h1>
+
     <!-- Dropdown to Select UPI ID -->
     <label for="upi-select">Choose UPI ID:</label>
     <select id="upi-select">
@@ -16,7 +17,13 @@
         <option value="add_new">+ Add New UPI ID</option>
     </select>
 
-    <!-- New UPI Form (Initially Hidden) -->
+    <!-- Amount Input -->
+    <label for="amount">Enter Amount (INR):</label>
+    <input type="number" id="amount" placeholder="Enter Amount">
+
+    <button id="generate-btn">Generate QR Code</button>
+
+    <!-- New UPI Form (Hidden Initially) -->
     <div id="new-upi-form" style="display: none;">
         <label for="new-upi-id">New UPI ID:</label>
         <input type="text" id="new-upi-id" placeholder="example@upi">
@@ -24,18 +31,11 @@
         <input type="text" id="new-name" placeholder="Payee Name">
         <button id="save-upi">Save UPI ID</button>
     </div>
-         <label for="amount">Amount (₹):</label>
-        <input type="number" id="amount" step="0.01" min="0" required>
 
-        <button id="generate-btn">Generate QR Code</button>
-
-        <!-- QR Code Display -->
-        <div id="qr-container">
-            <h3>QR Code:</h3>
-            <canvas id="qr-code"></canvas>
-            <p id="upi-name"></p> <!-- Name shown under QR Code -->
-        </div>
-    </div>
     <!-- QR Code Display -->
+    <div id="qr-container">
+        <div id="qr-code"></div>
+        <p id="upi-name"></p>
+    </div>
 </body>
 </html>
