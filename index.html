@@ -3,14 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic UPI QR Code</title>
+    <title>Dynamic UPI QR Generator</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="script.js" defer></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        #new-upi-form {
+            display: none;
+            margin-top: 10px;
+        }
+        #qr-container {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
+
     <h1>UPI QR Code Generator</h1>
 
-    <!-- Dropdown to Select UPI ID -->
+    <!-- UPI Selection -->
     <label for="upi-select">Choose UPI ID:</label>
     <select id="upi-select">
         <option value="" disabled selected>Select a UPI ID</option>
@@ -23,8 +37,8 @@
 
     <button id="generate-btn">Generate QR Code</button>
 
-    <!-- New UPI Form (Hidden Initially) -->
-    <div id="new-upi-form" style="display: none;">
+    <!-- New UPI Form -->
+    <div id="new-upi-form">
         <label for="new-upi-id">New UPI ID:</label>
         <input type="text" id="new-upi-id" placeholder="example@upi">
         <label for="new-name">Payee Name:</label>
@@ -37,5 +51,6 @@
         <div id="qr-code"></div>
         <p id="upi-name"></p>
     </div>
+
 </body>
 </html>
