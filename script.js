@@ -46,12 +46,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById('generate-btn').addEventListener('click', function () {
         const upiId = select.value;
+        if (!upiId || upiId === "add_new") {
+            alert("Please select a valid UPI ID.");
+            return;
+        }
+
         const selectedOption = select.options[select.selectedIndex];
         const name = selectedOption.getAttribute('data-name') || '';
-        const amount = document.getElementById('amount').value;
 
-        if (!upiId || !amount) {
-            alert("Please select a UPI ID and enter an amount.");
+        const amount = document.getElementById('amount').value;
+        if (!amount || isNaN(amount) || amount <= 0) {
+            alert("Please enter a valid amount.");
             return;
         }
 
@@ -60,7 +65,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Clear old QR code and generate a new one
         qrContainer.innerHTML = "";
-        new QRCode(qrContainer, upiString);
+        new QRCode(qrContainer, {
+            text: upiString,
+            width: 200,
+            height: 200
+        });
 
         // Display payee name
         upiNameDisplay.textContent = `Payee: ${name}`;
