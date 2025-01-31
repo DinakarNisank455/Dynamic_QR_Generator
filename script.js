@@ -1,7 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
     const select = document.getElementById('upi-select');
     const newUpiForm = document.getElementById('new-upi-form');
-    const qrContainer = document.getElementById('qr-container');
+    const qrContainer = document.getElementById('qr-code');
+    const upiNameDisplay = document.getElementById('upi-name');
 
     function loadUpiIds() {
         const storedUpiIds = JSON.parse(localStorage.getItem('upiIds')) || [];
@@ -12,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const option = document.createElement('option');
             option.value = entry.upiId;
             option.textContent = `${entry.name} (${entry.upiId})`;
+            option.setAttribute("data-name", entry.name);
             select.appendChild(option);
         });
     }
@@ -21,7 +23,6 @@ document.addEventListener('DOMContentLoaded', function () {
             newUpiForm.style.display = 'block';
         } else {
             newUpiForm.style.display = 'none';
-            generateQrCode(this.value);
         }
     });
 
@@ -43,30 +44,27 @@ document.addEventListener('DOMContentLoaded', function () {
         newUpiForm.style.display = 'none';
     });
 
-document.getElementById('generate-btn').addEventListener('click', async () => {
-            const select = document.getElementById('upi-select');
-            const upiId = select.value;
-            const selectedOption = select.options[select.selectedIndex];
-            const name = selectedOption.getAttribute('data-name') || '';
+    document.getElementById('generate-btn').addEventListener('click', function () {
+        const upiId = select.value;
+        const selectedOption = select.options[select.selectedIndex];
+        const name = selectedOption.getAttribute('data-name') || '';
+        const amount = document.getElementById('amount').value;
 
-            const amount = document.getElementById('amount').value;
-            if (!upiId || !amount) {
-                alert("Please select UPI ID and enter amount.");
-                return;
-            }
+        if (!upiId || !amount) {
+            alert("Please select a UPI ID and enter an amount.");
+            return;
+        }
 
-            // Generate UPI string
-            const upiString = `upi://pay?pa=${upiId}&am=${amount}&cu=INR`;
+        // Generate UPI string with amount
+        const upiString = `upi://pay?pa=${upiId}&am=${amount}&cu=INR`;
 
-            // Generate QR Code
-            const qrCanvas = document.getElementById('qr-code');
-            QRCode.toCanvas(qrCanvas, upiString, function (error) {
-                if (error) console.error(error);
-                console.log('QR Code generated!');
-            });
+        // Clear old QR code and generate a new one
+        qrContainer.innerHTML = "";
+        new QRCode(qrContainer, upiString);
 
-            // Display name below QR
-            document.getElementById('upi-name').textContent = `Payee: ${name}`;
+        // Display payee name
+        upiNameDisplay.textContent = `Payee: ${name}`;
+    });
 
     loadUpiIds();
 });
