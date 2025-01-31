@@ -1,137 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic UPI QR Code Generator</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+    <title>Dynamic UPI QR Code</title>
+    <script src="script.js" defer></script>
 </head>
-
 <body>
-    <div class="container">
-        <h1>Generate UPI QR Code</h1>
+    <h1>UPI QR Code Generator</h1>
+    
+    <!-- Dropdown to Select UPI ID -->
+    <label for="upi-select">Choose UPI ID:</label>
+    <select id="upi-select">
+        <option value="" disabled selected>Select a UPI ID</option>
+        <option value="add_new">+ Add New UPI ID</option>
+    </select>
 
-        <!-- Select or Add UPI ID -->
-        <label for="upi-select">Select UPI ID:</label>
-        <select style="padding: 10px;" id="upi-select">
-            <option value="" disabled selected>Select a UPI ID</option>
-            <option value="add_new">+ Add New UPI ID</option>
-        </select>
-
-        <!-- Form for adding a new UPI ID -->
-<div id="new-upi-form" style="display: none;padding-top: 10px;">
-    <label for="new-upi-id">New UPI ID:</label>
-    <input type="text" id="new-upi-id" placeholder="example@upi">
-    <label for="new-name">Payee Name:</label>
-    <input type="text" id="new-name" placeholder="Payee Name">
-    <div>
-            <button id="save-upi">Save UPI ID</button>
+    <!-- New UPI Form (Initially Hidden) -->
+    <div id="new-upi-form" style="display: none;">
+        <label for="new-upi-id">New UPI ID:</label>
+        <input type="text" id="new-upi-id" placeholder="example@upi">
+        <label for="new-name">Payee Name:</label>
+        <input type="text" id="new-name" placeholder="Payee Name">
+        <button id="save-upi">Save UPI ID</button>
     </div>
 
-</div>
-
-        <!-- Payment Form -->
-         <div style="margin-top: 50px;">
-            <label for="amount">Amount (₹):</label>
-            <input type="number" id="amount" step="0.01" min="0" required>
-         </div>
-
-
-        <button id="generate-btn">Generate QR Code</button>
-
-        <!-- QR Code Display -->
-        <div id="qr-container">
-            <h3>QR Code:</h3>
-            <canvas id="qr-code"></canvas>
-            <p id="upi-name"></p> <!-- Name shown under QR Code -->
-        </div>
-    </div>
-
-    <script>
-        async function fetchUpiIds() {
-            const response = await fetch('http://127.0.0.1:5000/get_upi_ids');
-            const data = await response.json();
-            const select = document.getElementById('upi-select');
-
-            // Remove old options except the default one
-            select.innerHTML = `<option value="" disabled selected>Select a UPI ID</option>
-                                <option value="add_new">+ Add New UPI ID</option>`;
-
-            // Populate dropdown with stored UPI IDs
-            data.forEach(entry => {
-                const option = document.createElement('option');
-                option.value = entry.upiId;
-                option.textContent = `${entry.name} (${entry.upiId})`;
-                option.setAttribute('data-name', entry.name);
-                select.appendChild(option);
-            });
-        }
-
-    document.getElementById('upi-select').addEventListener('change', function () {
-        const newUpiForm = document.getElementById('new-upi-form');
-        if (this.value === "add_new") {
-            newUpiForm.style.display = 'block';  // Show form when "Add New" is selected
-        } else {
-            newUpiForm.style.display = 'none';   // Hide form otherwise
-        }
-    });
-
-        document.getElementById('save-upi').addEventListener('click', async () => {
-            const newUpiId = document.getElementById('new-upi-id').value;
-            const newName = document.getElementById('new-name').value;
-
-            if (!newUpiId || !newName) {
-                alert("Please enter UPI ID and Name.");
-                return;
-            }
-
-            // Send new UPI ID to back-end
-            const response = await fetch('http://127.0.0.1:5000/add_upi_id', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ upiId: newUpiId, name: newName })
-            });
-
-            if (response.ok) {
-                alert("UPI ID added successfully!");
-                fetchUpiIds(); // Refresh dropdown
-                document.getElementById('new-upi-form').style.display = 'none';
-            } else {
-                alert("Failed to add UPI ID.");
-            }
-        });
-
-        document.getElementById('generate-btn').addEventListener('click', async () => {
-            const select = document.getElementById('upi-select');
-            const upiId = select.value;
-            const selectedOption = select.options[select.selectedIndex];
-            const name = selectedOption.getAttribute('data-name') || '';
-
-            const amount = document.getElementById('amount').value;
-            if (!upiId || !amount) {
-                alert("Please select UPI ID and enter amount.");
-                return;
-            }
-
-            // Generate UPI string
-            const upiString = `upi://pay?pa=${upiId}&am=${amount}&cu=INR`;
-
-            // Generate QR Code
-            const qrCanvas = document.getElementById('qr-code');
-            QRCode.toCanvas(qrCanvas, upiString, function (error) {
-                if (error) console.error(error);
-                console.log('QR Code generated!');
-            });
-
-            // Display name below QR
-            document.getElementById('upi-name').textContent = `Payee: ${name}`;
-        });
-
-        // Fetch stored UPI IDs on page load
-        fetchUpiIds();
-    </script>
+    <!-- QR Code Display -->
+    <div id="qr-container"></div>
 </body>
-
 </html>
