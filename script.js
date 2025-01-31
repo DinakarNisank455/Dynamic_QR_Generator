@@ -43,10 +43,30 @@ document.addEventListener('DOMContentLoaded', function () {
         newUpiForm.style.display = 'none';
     });
 
-    function generateQrCode(upiId) {
-        qrContainer.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=${upiId}" alt="QR Code">
-                                 <p>${upiId}</p>`;
-    }
+document.getElementById('generate-btn').addEventListener('click', async () => {
+            const select = document.getElementById('upi-select');
+            const upiId = select.value;
+            const selectedOption = select.options[select.selectedIndex];
+            const name = selectedOption.getAttribute('data-name') || '';
+
+            const amount = document.getElementById('amount').value;
+            if (!upiId || !amount) {
+                alert("Please select UPI ID and enter amount.");
+                return;
+            }
+
+            // Generate UPI string
+            const upiString = `upi://pay?pa=${upiId}&am=${amount}&cu=INR`;
+
+            // Generate QR Code
+            const qrCanvas = document.getElementById('qr-code');
+            QRCode.toCanvas(qrCanvas, upiString, function (error) {
+                if (error) console.error(error);
+                console.log('QR Code generated!');
+            });
+
+            // Display name below QR
+            document.getElementById('upi-name').textContent = `Payee: ${name}`;
 
     loadUpiIds();
 });
