@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
     const select = document.getElementById('upi-select');
-    const newUpiForm = document.getElementById('new-upi-form');
     const qrContainer = document.getElementById('qr-code');
     const upiNameDisplay = document.getElementById('upi-name');
 
