@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     const select = document.getElementById('upi-select');
+    const newUpiForm = document.getElementById('new-upi-form');
+    const amountContainer = document.getElementById('amount-container');
     const qrContainer = document.getElementById('qr-code');
     const upiNameDisplay = document.getElementById('upi-name');
 
@@ -20,8 +22,10 @@ document.addEventListener('DOMContentLoaded', function () {
     select.addEventListener('change', function () {
         if (this.value === "add_new") {
             newUpiForm.style.display = 'block';
+            amountContainer.style.display = 'none';  // Hide amount input
         } else {
             newUpiForm.style.display = 'none';
+            amountContainer.style.display = 'block'; // Show amount input
         }
     });
 
@@ -41,6 +45,7 @@ document.addEventListener('DOMContentLoaded', function () {
         alert("UPI ID saved successfully!");
         loadUpiIds();
         newUpiForm.style.display = 'none';
+        amountContainer.style.display = 'block'; // Show amount input again
     });
 
     document.getElementById('generate-btn').addEventListener('click', function () {
